@@ -29,7 +29,7 @@ class LLCalculatorBrain {
         } catch Error.DivideByZero {
             return "F*cking zero... -_-b"
         } catch Error.WrongEquation {
-            return "...What?? ಠ_ಠ"
+            return "...I can not understand ಠ_ಠ"
         }
         
         var finalResult = Double()

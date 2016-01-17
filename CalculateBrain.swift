@@ -23,24 +23,17 @@ class LLCalculatorBrain {
         let tempArray = Array(equation.characters)
         let calArray = organizeArray(tempArray)
         var firstTimeArray = [String]()
-        
+        var finalResult = Double()
+
         do {
             try firstTimeArray = calculateEquationForTheFirstTime(calArray)
-        } catch Error.DivideByZero {
-            return "F*cking zero... -_-b"
-        } catch Error.WrongEquation {
-            return "...I can not understand ಠ_ಠ"
-        }
-        
-        var finalResult = Double()
-        do {
             try finalResult = calculateEquationForTheSecondTime(firstTimeArray)
         } catch Error.DivideByZero {
-            return "You can't divide by zero"
+            return "You cannot divide by zero... -_-b"
         } catch Error.WrongEquation {
-            return "...What??"
+            return "...I can not understand your equation ಠ_ಠ"
         }
-        
+                
         let result = Int(finalResult)
         if Double(result) == finalResult {
             return String(result)

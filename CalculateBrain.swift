@@ -29,9 +29,9 @@ class LLCalculatorBrain {
             try firstTimeArray = calculateEquationForTheFirstTime(calArray)
             try finalResult = calculateEquationForTheSecondTime(firstTimeArray)
         } catch Error.DivideByZero {
-            return "You cannot divide by zero... -_-b"
+            return "Error: 1"
         } catch Error.WrongEquation {
-            return "...I can not understand your equation ಠ_ಠ"
+            return "Error: 2"
         }
                 
         let result = Int(finalResult)

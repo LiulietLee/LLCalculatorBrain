@@ -5,6 +5,8 @@ This is a little stuff that be used to figure out string equation.
 Just move LLCalculatorBrain.swift to your project.
 
 ## Usage
+You can see example by downloading Example.zip
+
     let calculatorBrain = LLCalculatorBrain()
 
     let equation1 = "1+1" // Or something else
@@ -15,4 +17,3 @@ Just move LLCalculatorBrain.swift to your project.
     
     let equation3 = "kadhjfl akjf oiae"
     let result3 = calculatorBrain.calculateThisEquation(equation3) // result = "Error: 2"
-    

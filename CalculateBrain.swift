@@ -127,6 +127,10 @@ class LLCalculatorBrain {
                         throw Error.WrongEquation
                     }
                     
+                    if nextArray.count == 0 {
+                        throw Error.WrongEquation
+                    }
+                    
                     if let theFirstItemOfNextArray = Double(nextArray[0]) {
                         
                         do {

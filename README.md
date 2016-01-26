@@ -6,14 +6,17 @@ Just move LLCalculatorBrain.swift to your project.
 
 ## Usage
 You can see example by downloading Example.zip
+```
+let calculatorBrain = LLCalculatorBrain()
 
-    let calculatorBrain = LLCalculatorBrain()
+let equation1 = "1+1*(2*3/(2-1)^2.5)-4.43" // Or something like this
+let result1 = calculatorBrain.calculateThisEquation(equation1)
+```
+### Error Code
+* Error 1: Divide by zero
+* Error 2: Wrong equation
 
-    let equation1 = "1+1" // Or something else
-    let result1 = calculatorBrain.calculateThisEquation(equation1) // result = "2"
-    
-    let equation2 = "1/0"
-    let result2 = calculatorBrain.calculateThisEquation(equation2) // result = "Error: 1"
-    
-    let equation3 = "kadhjfl akjf oiae"
-    let result3 = calculatorBrain.calculateThisEquation(equation3) // result = "Error: 2"
+## TO DO
+* sin, cos and tan
+* sqrt
+* More Error Catch

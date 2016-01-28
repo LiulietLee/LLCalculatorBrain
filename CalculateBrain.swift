@@ -16,6 +16,9 @@ class LLCalculatorBrain {
     
     /// Input a string equation, output a string result
     func calculateThisEquation(equation: String) -> String {
+        if equation == "" {
+            return "Error: 2"
+        }
         return try! calculateEquation(equation)
     }
     
@@ -170,6 +173,8 @@ class LLCalculatorBrain {
                             numOfBracket--
                             if numOfBracket == 0 {
                                 break
+                            } else {
+                                arr += [a]
                             }
                         }
                     }

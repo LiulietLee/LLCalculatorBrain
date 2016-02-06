@@ -10,6 +10,8 @@ import Foundation
 
 class LLCalculatorBrain {
     
+    private let pi = M_PI
+    
     enum Error: ErrorType {
         case DivideByZero, WrongEquation
     }
@@ -61,11 +63,24 @@ class LLCalculatorBrain {
                 case " ": continue
                     
                 default:
-                    if temp != "" {
-                        returnValue += [temp]
-                        temp = ""
+                    switch arr {
+                    case "+", "-", "*", "/", "^", "(", ")":
+                        if temp != "" {
+                            returnValue += [temp]
+                            temp = ""
+                        }
+                        returnValue += [String(arr)]
+
+                    default:
+                        temp += String(arr)
+                        switch temp {
+                        case "sin", "cos", "tan", "pi":
+                            returnValue += [temp]
+                            temp = ""
+                            
+                        default: break
+                        }
                     }
-                    returnValue += [String(arr)]
                 }
             }
         }
@@ -157,8 +172,13 @@ class LLCalculatorBrain {
 
                     operation = op
                     
-                case "(":
+                case "(", "sin", "cos", "tan":
                     array.removeFirst()
+                    
+                    if op == "sin" || op == "cos" || op == "tan" {
+                        array.removeFirst()
+                    }
+
                     var arr = [String]()
                     var numOfBracket = 1
                     
@@ -181,18 +201,16 @@ class LLCalculatorBrain {
                     
                     if numOfBracket != 0 { throw Error.WrongEquation }
                     
-                    var inBracket = [String]()
-                    
                     do {
-                        try inBracket = calculateEquationForTheFirstTime(arr)
-                    } catch Error.DivideByZero {
-                        throw Error.DivideByZero
-                    } catch Error.WrongEquation {
-                        throw Error.WrongEquation
-                    }
-                    
-                    do {
-                        try array = [String(calculateEquationForTheSecondTime(inBracket))] + array
+                        let inBracket = try calculateEquationForTheFirstTime(arr)
+                       
+                        var valueInBracket = try calculateEquationForTheSecondTime(inBracket)
+                        
+                        if op == "sin" || op == "cos" || op == "tan" {
+                            valueInBracket = try calculateValue(valueInBracket, secondNumber: 0, op: op)
+                        }
+                        
+                        array = [String(valueInBracket)] + array
                     } catch Error.DivideByZero {
                         throw Error.DivideByZero
                     } catch Error.WrongEquation {
@@ -200,6 +218,26 @@ class LLCalculatorBrain {
                     }
                     
                     continue
+                    
+                case "pi":
+                    let num = M_PI
+                    
+                    if firstNumber == nil {
+                        firstNumber = num
+                    } else {
+                        secondNumber = num
+                        
+                        do {
+                            try firstNumber = calculateValue(firstNumber!, secondNumber: secondNumber!, op: operation)
+                        } catch Error.DivideByZero {
+                            throw Error.DivideByZero
+                        } catch Error.WrongEquation {
+                            throw Error.WrongEquation
+                        }
+                        
+                        operation = ""
+                        secondNumber = nil
+                    }
 
                 default: throw Error.WrongEquation
                 }
@@ -255,6 +293,26 @@ class LLCalculatorBrain {
                     if operation != "" { throw Error.WrongEquation }
                     
                     operation = op
+                
+                case "pi":
+                    let num = M_PI
+                    
+                    if firstNumber == nil {
+                        firstNumber = num
+                    } else {
+                        secondNumber = num
+                        
+                        do {
+                            try firstNumber = calculateValue(firstNumber!, secondNumber: secondNumber!, op: operation)
+                        } catch Error.DivideByZero {
+                            throw Error.DivideByZero
+                        } catch Error.WrongEquation {
+                            throw Error.WrongEquation
+                        }
+                        
+                        operation = ""
+                        secondNumber = nil
+                    }
                     
                 default: throw Error.WrongEquation
                 }
@@ -280,7 +338,18 @@ class LLCalculatorBrain {
             }
             return firstNumber / secondNumber
             
-        case "^": return pow(firstNumber, secondNumber)
+        case "^":
+            return pow(firstNumber, secondNumber)
+        
+        case "sin":
+            return sin(firstNumber)
+            
+        case "cos":
+            return cos(firstNumber)
+            
+        case "tan":
+            return tan(firstNumber)
+            
         default:
             throw Error.WrongEquation
         }

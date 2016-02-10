@@ -74,7 +74,7 @@ class LLCalculatorBrain {
                     default:
                         temp += String(arr)
                         switch temp {
-                        case "sin", "cos", "tan", "pi":
+                        case "sin", "cos", "tan", "pi", "sqrt":
                             returnValue += [temp]
                             temp = ""
                             
@@ -172,10 +172,10 @@ class LLCalculatorBrain {
 
                     operation = op
                     
-                case "(", "sin", "cos", "tan":
+                case "(", "sin", "cos", "tan", "sqrt":
                     array.removeFirst()
                     
-                    if op == "sin" || op == "cos" || op == "tan" {
+                    if op == "sin" || op == "cos" || op == "tan" || op == "sqrt"{
                         array.removeFirst()
                     }
 
@@ -206,7 +206,7 @@ class LLCalculatorBrain {
                        
                         var valueInBracket = try calculateEquationForTheSecondTime(inBracket)
                         
-                        if op == "sin" || op == "cos" || op == "tan" {
+                        if op == "sin" || op == "cos" || op == "tan" || op == "sqrt" {
                             valueInBracket = try calculateValue(valueInBracket, secondNumber: 0, op: op)
                         }
                         
@@ -349,6 +349,9 @@ class LLCalculatorBrain {
             
         case "tan":
             return tan(firstNumber)
+            
+        case "sqrt":
+            return sqrt(firstNumber)
             
         default:
             throw Error.WrongEquation

@@ -13,13 +13,17 @@ class LLCalculatorBrain {
     private let pi = M_PI
     
     enum Error: ErrorType {
-        case DivideByZero, WrongEquation
+        case DivideByZero,
+             ParenthesesDoNotMatch,
+             NegativeUnderSqrt,
+             WrongEquation,
+             EmptyEquation
     }
     
     /// Input a string equation, output a string result
     func calculateThisEquation(equation: String) -> String {
         if equation == "" {
-            return "Error: 2"
+            return "Error: 5"
         }
         return try! calculateEquation(equation)
     }
@@ -35,8 +39,12 @@ class LLCalculatorBrain {
             try finalResult = calculateEquationForTheSecondTime(firstTimeArray)
         } catch Error.DivideByZero {
             return "Error: 1"
-        } catch Error.WrongEquation {
+        } catch Error.ParenthesesDoNotMatch {
             return "Error: 2"
+        } catch Error.NegativeUnderSqrt {
+            return "Error: 3"
+        } catch Error.WrongEquation {
+            return "Error: 4"
         }
                 
         let result = Int(finalResult)
@@ -112,6 +120,10 @@ class LLCalculatorBrain {
                         try firstNumber = calculateValue(firstNumber!, secondNumber: secondNumber!, op: operation)
                     } catch Error.DivideByZero {
                         throw Error.DivideByZero
+                    } catch Error.ParenthesesDoNotMatch {
+                        throw Error.ParenthesesDoNotMatch
+                    } catch Error.NegativeUnderSqrt {
+                        throw Error.NegativeUnderSqrt
                     } catch Error.WrongEquation {
                         throw Error.WrongEquation
                     }
@@ -137,10 +149,15 @@ class LLCalculatorBrain {
                     array.removeFirst()
 
                     var nextArray = [String]()
+                    
                     do {
                         try nextArray = calculateEquationForTheFirstTime(array)
                     } catch Error.DivideByZero {
                         throw Error.DivideByZero
+                    } catch Error.ParenthesesDoNotMatch {
+                        throw Error.ParenthesesDoNotMatch
+                    } catch Error.NegativeUnderSqrt {
+                        throw Error.NegativeUnderSqrt
                     } catch Error.WrongEquation {
                         throw Error.WrongEquation
                     }
@@ -155,6 +172,10 @@ class LLCalculatorBrain {
                             try firstNumber = calculateValue(firstNumber!, secondNumber: theFirstItemOfNextArray, op: operation)
                         } catch Error.DivideByZero {
                             throw Error.DivideByZero
+                        } catch Error.ParenthesesDoNotMatch {
+                            throw Error.ParenthesesDoNotMatch
+                        } catch Error.NegativeUnderSqrt {
+                            throw Error.NegativeUnderSqrt
                         } catch Error.WrongEquation {
                             throw Error.WrongEquation
                         }
@@ -213,6 +234,10 @@ class LLCalculatorBrain {
                         array = [String(valueInBracket)] + array
                     } catch Error.DivideByZero {
                         throw Error.DivideByZero
+                    } catch Error.ParenthesesDoNotMatch {
+                        throw Error.ParenthesesDoNotMatch
+                    } catch Error.NegativeUnderSqrt {
+                        throw Error.NegativeUnderSqrt
                     } catch Error.WrongEquation {
                         throw Error.WrongEquation
                     }
@@ -231,6 +256,10 @@ class LLCalculatorBrain {
                             try firstNumber = calculateValue(firstNumber!, secondNumber: secondNumber!, op: operation)
                         } catch Error.DivideByZero {
                             throw Error.DivideByZero
+                        } catch Error.ParenthesesDoNotMatch {
+                            throw Error.ParenthesesDoNotMatch
+                        } catch Error.NegativeUnderSqrt {
+                            throw Error.NegativeUnderSqrt
                         } catch Error.WrongEquation {
                             throw Error.WrongEquation
                         }
@@ -276,6 +305,10 @@ class LLCalculatorBrain {
                         try firstNumber = calculateValue(firstNumber!, secondNumber: secondNumber!, op: operation)
                     } catch Error.DivideByZero {
                         throw Error.DivideByZero
+                    } catch Error.ParenthesesDoNotMatch {
+                        throw Error.ParenthesesDoNotMatch
+                    } catch Error.NegativeUnderSqrt {
+                        throw Error.NegativeUnderSqrt
                     } catch Error.WrongEquation {
                         throw Error.WrongEquation
                     }
@@ -306,6 +339,10 @@ class LLCalculatorBrain {
                             try firstNumber = calculateValue(firstNumber!, secondNumber: secondNumber!, op: operation)
                         } catch Error.DivideByZero {
                             throw Error.DivideByZero
+                        } catch Error.ParenthesesDoNotMatch {
+                            throw Error.ParenthesesDoNotMatch
+                        } catch Error.NegativeUnderSqrt {
+                            throw Error.NegativeUnderSqrt
                         } catch Error.WrongEquation {
                             throw Error.WrongEquation
                         }
@@ -351,6 +388,9 @@ class LLCalculatorBrain {
             return tan(firstNumber)
             
         case "sqrt":
+            if firstNumber < 0 {
+                throw Error.NegativeUnderSqrt
+            }
             return sqrt(firstNumber)
             
         default:

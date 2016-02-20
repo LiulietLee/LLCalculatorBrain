@@ -5,7 +5,7 @@ This is a little stuff that be used to figure out string equation.
 Just move LLCalculatorBrain.swift to your project.
 
 ## Usage
-You can see example by downloading Example.zip
+You can see a example in /SampleExample
 ```
 let calculatorBrain = LLCalculatorBrain()
 

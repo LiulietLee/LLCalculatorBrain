@@ -13,11 +13,7 @@ class LLCalculatorBrain {
     private let pi = M_PI
     
     enum Error: ErrorType {
-        case DivideByZero,
-             ParenthesesDoNotMatch,
-             NegativeUnderSqrt,
-             WrongEquation,
-             EmptyEquation
+        case DivideByZero, ParenthesesDoNotMatch, NegativeUnderSqrt, WrongEquation
     }
     
     /// Input a string equation, output a string result
@@ -29,30 +25,26 @@ class LLCalculatorBrain {
     }
     
     private func calculateEquation(equation: String) throws -> String {
-        let tempArray = Array(equation.characters)
-        let calArray = organizeArray(tempArray)
-        var firstTimeArray = [String]()
-        var finalResult = Double()
-
         do {
+            let tempArray = Array(equation.characters)
+            let calArray = organizeArray(tempArray)
+            var firstTimeArray = [String]()
+            var finalResult = Double()
+
             try firstTimeArray = calculateEquationForTheFirstTime(calArray)
             try finalResult = calculateEquationForTheSecondTime(firstTimeArray)
-        } catch Error.DivideByZero {
-            return "Error: 1"
-        } catch Error.ParenthesesDoNotMatch {
-            return "Error: 2"
-        } catch Error.NegativeUnderSqrt {
-            return "Error: 3"
-        } catch Error.WrongEquation {
-            return "Error: 4"
-        }
-                
-        let result = Int(finalResult)
-        if Double(result) == finalResult {
-            return String(result)
-        }
-        
-        return String(finalResult)
+            
+            let result = Int(finalResult)
+            if Double(result) == finalResult {
+                return String(result)
+            }
+            
+            return String(finalResult)
+            
+        } catch Error.DivideByZero { return "Error: 1"
+        } catch Error.ParenthesesDoNotMatch { return "Error: 2"
+        } catch Error.NegativeUnderSqrt { return "Error: 3"
+        } catch Error.WrongEquation { return "Error: 4" }
     }
     
     /// Convert the String to an [String]
@@ -102,127 +94,96 @@ class LLCalculatorBrain {
     
     /// This function will solve ( ) * / ^, leave + and -
     private func calculateEquationForTheFirstTime(var array: [String]) throws -> [String] {
-        var firstNumber = Double?()
-        var secondNumber = Double?()
-        var operation = String()
-        var returnArray = [String]()
-        
-        while array.count > 0 {
-            let op = array[0]
+        do {
+            var firstNumber = Double?()
+            var secondNumber = Double?()
+            var operation = String()
+            var returnArray = [String]()
             
-            if let num = Double(op) {
-                if firstNumber == nil {
-                    firstNumber = num
-                } else {
-                    secondNumber = num
-                    
-                    do {
-                        try firstNumber = calculateValue(firstNumber!, secondNumber: secondNumber!, op: operation)
-                    } catch Error.DivideByZero {
-                        throw Error.DivideByZero
-                    } catch Error.ParenthesesDoNotMatch {
-                        throw Error.ParenthesesDoNotMatch
-                    } catch Error.NegativeUnderSqrt {
-                        throw Error.NegativeUnderSqrt
-                    } catch Error.WrongEquation {
-                        throw Error.WrongEquation
-                    }
-                    
-                    operation = ""
-                    secondNumber = nil
-                }
-            } else {
-                switch op {
-                case "+", "-":
-                    if firstNumber != nil {
-                        if let firstNum = firstNumber {
-                            returnArray += [String(firstNum)]
-                        }
-                        firstNumber = nil
-                    }
-                    returnArray += [op]
-                    
-                case "*", "/":
-                    if operation != "" { throw Error.WrongEquation }
-                    
-                    operation = op
-                    array.removeFirst()
+            while array.count > 0 {
+                let op = array[0]
+                
+                if let num = Double(op) {
+                    if firstNumber == nil {
+                        firstNumber = num
+                    } else {
+                        secondNumber = num
 
-                    var nextArray = [String]()
-                    
-                    do {
-                        try nextArray = calculateEquationForTheFirstTime(array)
-                    } catch Error.DivideByZero {
-                        throw Error.DivideByZero
-                    } catch Error.ParenthesesDoNotMatch {
-                        throw Error.ParenthesesDoNotMatch
-                    } catch Error.NegativeUnderSqrt {
-                        throw Error.NegativeUnderSqrt
-                    } catch Error.WrongEquation {
-                        throw Error.WrongEquation
-                    }
-                    
-                    if nextArray.count == 0 {
-                        throw Error.WrongEquation
-                    }
-                    
-                    if let theFirstItemOfNextArray = Double(nextArray[0]) {
+                        try firstNumber = calculateValue(firstNumber!, secondNumber: secondNumber!, op: operation)
                         
-                        do {
-                            try firstNumber = calculateValue(firstNumber!, secondNumber: theFirstItemOfNextArray, op: operation)
-                        } catch Error.DivideByZero {
-                            throw Error.DivideByZero
-                        } catch Error.ParenthesesDoNotMatch {
-                            throw Error.ParenthesesDoNotMatch
-                        } catch Error.NegativeUnderSqrt {
-                            throw Error.NegativeUnderSqrt
-                        } catch Error.WrongEquation {
+                        operation = ""
+                        secondNumber = nil
+                    }
+                } else {
+                    switch op {
+                    case "+", "-":
+                        if firstNumber != nil {
+                            if let firstNum = firstNumber {
+                                returnArray += [String(firstNum)]
+                            }
+                            firstNumber = nil
+                        }
+                        returnArray += [op]
+                        
+                    case "*", "/":
+                        if operation != "" { throw Error.WrongEquation }
+                        
+                        operation = op
+                        array.removeFirst()
+                        
+                        var nextArray = [String]()
+                        
+                        try nextArray = calculateEquationForTheFirstTime(array)
+                        
+                        if nextArray.count == 0 {
                             throw Error.WrongEquation
                         }
                         
-                        if let firstNum = firstNumber {
-                            nextArray[0] = String(firstNum)
+                        if let theFirstItemOfNextArray = Double(nextArray[0]) {
+                            try firstNumber = calculateValue(firstNumber!, secondNumber: theFirstItemOfNextArray, op: operation)
+                            
+                            if let firstNum = firstNumber {
+                                nextArray[0] = String(firstNum)
+                            }
+                            
+                            returnArray += nextArray
+                            return returnArray
                         }
                         
-                        returnArray += nextArray
-                        return returnArray
-                    }
-                    
-                case "^":
-                    if operation != "" { throw Error.WrongEquation }
+                    case "^":
+                        if operation != "" { throw Error.WrongEquation }
 
-                    operation = op
-                    
-                case "(", "sin", "cos", "tan", "sqrt":
-                    array.removeFirst()
-                    
-                    if op == "sin" || op == "cos" || op == "tan" || op == "sqrt"{
+                        operation = op
+                        
+                    case "(", "sin", "cos", "tan", "sqrt":
                         array.removeFirst()
-                    }
+                        
+                        if op == "sin" || op == "cos" || op == "tan" || op == "sqrt"{
+                            array.removeFirst()
+                        }
 
-                    var arr = [String]()
-                    var numOfBracket = 1
-                    
-                    for a in array {
-                        array.removeFirst()
-                        if a != ")" {
-                            if a == "(" {
-                                numOfBracket++
-                            }
-                            arr += [a]
-                        } else {
-                            numOfBracket--
-                            if numOfBracket == 0 {
-                                break
-                            } else {
+                        var arr = [String]()
+                        var numOfBracket = 1
+                        
+                        for a in array {
+                            array.removeFirst()
+                            if a != ")" {
+                                if a == "(" {
+                                    numOfBracket++
+                                }
                                 arr += [a]
+                            } else {
+                                numOfBracket--
+                                if numOfBracket == 0 {
+                                    break
+                                } else {
+                                    arr += [a]
+                                }
                             }
                         }
-                    }
-                    
-                    if numOfBracket != 0 { throw Error.WrongEquation }
-                    
-                    do {
+                        
+                        if numOfBracket != 0 { throw Error.WrongEquation }
+                        
                         let inBracket = try calculateEquationForTheFirstTime(arr)
                        
                         var valueInBracket = try calculateEquationForTheSecondTime(inBracket)
@@ -232,137 +193,104 @@ class LLCalculatorBrain {
                         }
                         
                         array = [String(valueInBracket)] + array
-                    } catch Error.DivideByZero {
-                        throw Error.DivideByZero
-                    } catch Error.ParenthesesDoNotMatch {
-                        throw Error.ParenthesesDoNotMatch
-                    } catch Error.NegativeUnderSqrt {
-                        throw Error.NegativeUnderSqrt
-                    } catch Error.WrongEquation {
-                        throw Error.WrongEquation
-                    }
-                    
-                    continue
-                    
-                case "pi":
-                    let num = M_PI
-                    
-                    if firstNumber == nil {
-                        firstNumber = num
-                    } else {
-                        secondNumber = num
-                        
-                        do {
-                            try firstNumber = calculateValue(firstNumber!, secondNumber: secondNumber!, op: operation)
-                        } catch Error.DivideByZero {
-                            throw Error.DivideByZero
-                        } catch Error.ParenthesesDoNotMatch {
-                            throw Error.ParenthesesDoNotMatch
-                        } catch Error.NegativeUnderSqrt {
-                            throw Error.NegativeUnderSqrt
-                        } catch Error.WrongEquation {
-                            throw Error.WrongEquation
-                        }
-                        
-                        operation = ""
-                        secondNumber = nil
-                    }
 
-                default: throw Error.WrongEquation
+                        continue
+                        
+                    case "pi":
+                        let num = M_PI
+                        
+                        if firstNumber == nil {
+                            firstNumber = num
+                        } else {
+                            
+                            secondNumber = num
+                            try firstNumber = calculateValue(firstNumber!, secondNumber: secondNumber!, op: operation)
+                            operation = ""
+                            secondNumber = nil
+                        }
+
+                    default: throw Error.WrongEquation
+                    }
+                }
+                
+                array.removeFirst()
+            }
+            
+            if firstNumber != nil {
+                if let firstNum = firstNumber {
+                    returnArray += [String(firstNum)]
                 }
             }
             
-            array.removeFirst()
-        }
-        
-        if firstNumber != nil {
-            if let firstNum = firstNumber {
-                returnArray += [String(firstNum)]
-            }
-        }
-        
-        if operation != "" { throw Error.WrongEquation }
-        
-        return returnArray
+            if operation != "" { throw Error.WrongEquation }
+            
+            return returnArray
+        } catch Error.DivideByZero { throw Error.DivideByZero
+        } catch Error.ParenthesesDoNotMatch { throw Error.ParenthesesDoNotMatch
+        } catch Error.NegativeUnderSqrt { throw Error.NegativeUnderSqrt
+        } catch Error.WrongEquation { throw Error.WrongEquation }
     }
     
     /// This function will add all items that be left by this first time
     private func calculateEquationForTheSecondTime(var array: [String]) throws -> Double {
-        var firstNumber = Double?()
-        var secondNumber = Double?()
-        var operation = String()
-        
-        while array.count > 0 {
-            let op = array[0]
+        do {
+            var firstNumber = Double?()
+            var secondNumber = Double?()
+            var operation = String()
             
-            if let num = Double(op) {
-                if firstNumber == nil {
-                    firstNumber = num
-                } else {
-                    secondNumber = num
-                    
-                    do {
-                        try firstNumber = calculateValue(firstNumber!, secondNumber: secondNumber!, op: operation)
-                    } catch Error.DivideByZero {
-                        throw Error.DivideByZero
-                    } catch Error.ParenthesesDoNotMatch {
-                        throw Error.ParenthesesDoNotMatch
-                    } catch Error.NegativeUnderSqrt {
-                        throw Error.NegativeUnderSqrt
-                    } catch Error.WrongEquation {
-                        throw Error.WrongEquation
-                    }
-                    
-                    operation = ""
-                    secondNumber = nil
-                }
-            } else {
-                switch op {
-                case "+", "-":
-                    if firstNumber == nil {
-                        firstNumber = 0
-                    }
-                    
-                    if operation != "" { throw Error.WrongEquation }
-                    
-                    operation = op
+            while array.count > 0 {
+                let op = array[0]
                 
-                case "pi":
-                    let num = M_PI
-                    
+                if let num = Double(op) {
                     if firstNumber == nil {
                         firstNumber = num
                     } else {
-                        secondNumber = num
-                        
-                        do {
+                            secondNumber = num
                             try firstNumber = calculateValue(firstNumber!, secondNumber: secondNumber!, op: operation)
-                        } catch Error.DivideByZero {
-                            throw Error.DivideByZero
-                        } catch Error.ParenthesesDoNotMatch {
-                            throw Error.ParenthesesDoNotMatch
-                        } catch Error.NegativeUnderSqrt {
-                            throw Error.NegativeUnderSqrt
-                        } catch Error.WrongEquation {
-                            throw Error.WrongEquation
+                            operation = ""
+                            secondNumber = nil
+                    }
+                } else {
+                    switch op {
+                    case "+", "-":
+                        if firstNumber == nil {
+                            firstNumber = 0
                         }
                         
-                        operation = ""
-                        secondNumber = nil
-                    }
+                        if operation != "" { throw Error.WrongEquation }
+                        
+                        operation = op
                     
-                default: throw Error.WrongEquation
+                    case "pi":
+                        let num = M_PI
+                        
+                        if firstNumber == nil {
+                            firstNumber = num
+                        } else {
+                            secondNumber = num
+                            
+                            try firstNumber = calculateValue(firstNumber!, secondNumber: secondNumber!, op: operation)
+                            
+                            operation = ""
+                            secondNumber = nil
+                        }
+                        
+                    default: throw Error.WrongEquation
+                    }
                 }
+                
+                array.removeFirst()
             }
             
-            array.removeFirst()
-        }
-        
-        if operation != "" { throw Error.WrongEquation }
-        
-        return firstNumber!
+            if operation != "" { throw Error.WrongEquation }
+            return firstNumber!
+
+        } catch Error.DivideByZero { throw Error.DivideByZero
+        } catch Error.ParenthesesDoNotMatch { throw Error.ParenthesesDoNotMatch
+        } catch Error.NegativeUnderSqrt { throw Error.NegativeUnderSqrt
+        } catch Error.WrongEquation { throw Error.WrongEquation }
     }
-    
+
     /// First number + - * ^ Second number
     private func calculateValue(firstNumber: Double, secondNumber: Double, op: String) throws -> Double {
         switch op {

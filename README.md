@@ -16,7 +16,10 @@ There MUST BE a "(" behind sin, cos, tan and sqrt.
 
 ### Error Code
 * Error 1: Divide by zero
-* Error 2: Wrong equation
+* Error 2: Parentheses do not match
+* Error 3: Negative under sqrt
+* Error 4: Wrong Equation
+* Error 5: Empty Equation
 
 ## TO DO
 * More Error Catch

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Darwin
 
 class LLCalculatorBrain {
     
@@ -307,13 +308,13 @@ class LLCalculatorBrain {
             return pow(firstNumber, secondNumber)
         
         case "sin":
-            return sin(firstNumber)
+            return processSin(firstNumber)
             
         case "cos":
-            return cos(firstNumber)
+            return processCos(firstNumber)
             
         case "tan":
-            return tan(firstNumber)
+            return processTan(firstNumber)
             
         case "sqrt":
             if firstNumber < 0 {
@@ -324,5 +325,23 @@ class LLCalculatorBrain {
         default:
             throw Error.WrongEquation
         }
+    }
+    
+    private func processSin(input: Double) -> Double {
+        let angle = input
+        let r = sin(angle)
+        return round(r * 100) / 100
+    }
+    
+    private func processCos(input: Double) -> Double {
+        let angle = input
+        let r = cos(angle)
+        return round(r * 100) / 100
+    }
+    
+    private func processTan(input: Double) -> Double {
+        let angle = input
+        let r = tan(angle)
+        return round(r * 100) / 100
     }
 }

@@ -328,20 +328,17 @@ class LLCalculatorBrain {
     }
     
     private func processSin(input: Double) -> Double {
-        let angle = input
-        let r = sin(angle)
+        let r = sin(input)
         return round(r * 100000000) / 100000000
     }
     
     private func processCos(input: Double) -> Double {
-        let angle = input
-        let r = cos(angle)
+        let r = cos(input)
         return round(r * 100000000) / 100000000
     }
     
     private func processTan(input: Double) -> Double {
-        let angle = input
-        let r = tan(angle)
+        let r = tan(input)
         return round(r * 100000000) / 100000000
     }
 }

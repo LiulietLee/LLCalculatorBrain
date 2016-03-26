@@ -94,7 +94,8 @@ class LLCalculatorBrain {
     }
     
     /// This function will solve ( ) * / ^, leave + and -
-    private func calculateEquationForTheFirstTime(var array: [String]) throws -> [String] {
+    private func calculateEquationForTheFirstTime(array: [String]) throws -> [String] {
+        var array = array
         do {
             var firstNumber = Double?()
             var secondNumber = Double?()
@@ -170,11 +171,11 @@ class LLCalculatorBrain {
                             array.removeFirst()
                             if a != ")" {
                                 if a == "(" {
-                                    numOfBracket++
+                                    numOfBracket += 1
                                 }
                                 arr += [a]
                             } else {
-                                numOfBracket--
+                                numOfBracket -= 1
                                 if numOfBracket == 0 {
                                     break
                                 } else {
@@ -233,7 +234,8 @@ class LLCalculatorBrain {
     }
     
     /// This function will add all items that be left by this first time
-    private func calculateEquationForTheSecondTime(var array: [String]) throws -> Double {
+    private func calculateEquationForTheSecondTime(array: [String]) throws -> Double {
+        var array = array
         do {
             var firstNumber = Double?()
             var secondNumber = Double?()

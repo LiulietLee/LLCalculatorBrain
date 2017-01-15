@@ -17,7 +17,7 @@ var equation = ""
 
 while(equation != "0") {
     print("\nPlease input your equation (type 0 to exit):")
-    equation = readLine(stripNewline: true)!
+    equation = readLine(strippingNewline: true)!
     
     let result = calculateBrain.calculateThisEquation(equation)
     

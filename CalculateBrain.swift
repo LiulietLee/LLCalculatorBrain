@@ -11,21 +11,24 @@ import Darwin
 
 class LLCalculatorBrain {
     
-    private let pi = M_PI
+    fileprivate let pi = M_PI
     
-    enum Error: ErrorType {
-        case DivideByZero, ParenthesesDoNotMatch, NegativeUnderSqrt, WrongEquation
+    enum CalculationError: Error {
+        case divideByZero
+        case parenthesesDoNotMatch
+        case negativeUnderSqrt
+        case wrongEquation
     }
     
     /// Input a string equation, output a string result
-    func calculateThisEquation(equation: String) -> String {
+    func calculateThisEquation(_ equation: String) -> String {
         if equation == "" {
             return "Error: 5"
         }
         return try! calculateEquation(equation)
     }
     
-    private func calculateEquation(equation: String) throws -> String {
+    fileprivate func calculateEquation(_ equation: String) throws -> String {
         do {
             let tempArray = Array(equation.characters)
             let calArray = organizeArray(tempArray)
@@ -42,14 +45,14 @@ class LLCalculatorBrain {
             
             return String(finalResult)
             
-        } catch Error.DivideByZero { return "Error: 1"
-        } catch Error.ParenthesesDoNotMatch { return "Error: 2"
-        } catch Error.NegativeUnderSqrt { return "Error: 3"
-        } catch Error.WrongEquation { return "Error: 4" }
+        } catch CalculationError.divideByZero { return "Error: 1"
+        } catch CalculationError.parenthesesDoNotMatch { return "Error: 2"
+        } catch CalculationError.negativeUnderSqrt { return "Error: 3"
+        } catch CalculationError.wrongEquation { return "Error: 4" }
     }
     
     /// Convert the String to an [String]
-    private func organizeArray(array: [Character]) -> [String] {
+    fileprivate func organizeArray(_ array: [Character]) -> [String] {
         var temp = String()
         var returnValue = [String]()
         
@@ -94,11 +97,11 @@ class LLCalculatorBrain {
     }
     
     /// This function will solve ( ) * / ^, leave + and -
-    private func calculateEquationForTheFirstTime(array: [String]) throws -> [String] {
+    fileprivate func calculateEquationForTheFirstTime(_ array: [String]) throws -> [String] {
         var array = array
         do {
-            var firstNumber = Double?()
-            var secondNumber = Double?()
+            var firstNumber: Double?
+            var secondNumber: Double?
             var operation = String()
             var returnArray = [String]()
             
@@ -119,16 +122,14 @@ class LLCalculatorBrain {
                 } else {
                     switch op {
                     case "+", "-":
-                        if firstNumber != nil {
-                            if let firstNum = firstNumber {
-                                returnArray += [String(firstNum)]
-                            }
-                            firstNumber = nil
+                        if let firstNum = firstNumber {
+                            returnArray += [String(firstNum)]
                         }
+                        firstNumber = nil
                         returnArray += [op]
                         
                     case "*", "/":
-                        if operation != "" { throw Error.WrongEquation }
+                        if operation != "" { throw CalculationError.wrongEquation }
                         
                         operation = op
                         array.removeFirst()
@@ -138,7 +139,7 @@ class LLCalculatorBrain {
                         try nextArray = calculateEquationForTheFirstTime(array)
                         
                         if nextArray.count == 0 {
-                            throw Error.WrongEquation
+                            throw CalculationError.wrongEquation
                         }
                         
                         if let theFirstItemOfNextArray = Double(nextArray[0]) {
@@ -153,7 +154,7 @@ class LLCalculatorBrain {
                         }
                         
                     case "^":
-                        if operation != "" { throw Error.WrongEquation }
+                        if operation != "" { throw CalculationError.wrongEquation }
 
                         operation = op
                         
@@ -184,7 +185,7 @@ class LLCalculatorBrain {
                             }
                         }
                         
-                        if numOfBracket != 0 { throw Error.WrongEquation }
+                        if numOfBracket != 0 { throw CalculationError.wrongEquation }
                         
                         let inBracket = try calculateEquationForTheFirstTime(arr)
                        
@@ -211,7 +212,7 @@ class LLCalculatorBrain {
                             secondNumber = nil
                         }
 
-                    default: throw Error.WrongEquation
+                    default: throw CalculationError.wrongEquation
                     }
                 }
                 
@@ -224,21 +225,21 @@ class LLCalculatorBrain {
                 }
             }
             
-            if operation != "" { throw Error.WrongEquation }
+            if operation != "" { throw CalculationError.wrongEquation }
             
             return returnArray
-        } catch Error.DivideByZero { throw Error.DivideByZero
-        } catch Error.ParenthesesDoNotMatch { throw Error.ParenthesesDoNotMatch
-        } catch Error.NegativeUnderSqrt { throw Error.NegativeUnderSqrt
-        } catch Error.WrongEquation { throw Error.WrongEquation }
+        } catch CalculationError.divideByZero { throw CalculationError.divideByZero
+        } catch CalculationError.parenthesesDoNotMatch { throw CalculationError.parenthesesDoNotMatch
+        } catch CalculationError.negativeUnderSqrt { throw CalculationError.negativeUnderSqrt
+        } catch CalculationError.wrongEquation { throw CalculationError.wrongEquation }
     }
     
     /// This function will add all items that be left by this first time
-    private func calculateEquationForTheSecondTime(array: [String]) throws -> Double {
+    fileprivate func calculateEquationForTheSecondTime(_ array: [String]) throws -> Double {
         var array = array
         do {
-            var firstNumber = Double?()
-            var secondNumber = Double?()
+            var firstNumber: Double?
+            var secondNumber: Double?
             var operation = String()
             
             while array.count > 0 {
@@ -260,7 +261,7 @@ class LLCalculatorBrain {
                             firstNumber = 0
                         }
                         
-                        if operation != "" { throw Error.WrongEquation }
+                        if operation != "" { throw CalculationError.wrongEquation }
                         
                         operation = op
                     
@@ -278,31 +279,31 @@ class LLCalculatorBrain {
                             secondNumber = nil
                         }
                         
-                    default: throw Error.WrongEquation
+                    default: throw CalculationError.wrongEquation
                     }
                 }
                 
                 array.removeFirst()
             }
             
-            if operation != "" { throw Error.WrongEquation }
+            if operation != "" { throw CalculationError.wrongEquation }
             return firstNumber!
 
-        } catch Error.DivideByZero { throw Error.DivideByZero
-        } catch Error.ParenthesesDoNotMatch { throw Error.ParenthesesDoNotMatch
-        } catch Error.NegativeUnderSqrt { throw Error.NegativeUnderSqrt
-        } catch Error.WrongEquation { throw Error.WrongEquation }
+        } catch CalculationError.divideByZero { throw CalculationError.divideByZero
+        } catch CalculationError.parenthesesDoNotMatch { throw CalculationError.parenthesesDoNotMatch
+        } catch CalculationError.negativeUnderSqrt { throw CalculationError.negativeUnderSqrt
+        } catch CalculationError.wrongEquation { throw CalculationError.wrongEquation }
     }
 
     /// First number + - * ^ Second number
-    private func calculateValue(firstNumber: Double, secondNumber: Double, op: String) throws -> Double {
+    fileprivate func calculateValue(_ firstNumber: Double, secondNumber: Double, op: String) throws -> Double {
         switch op {
         case "+": return firstNumber + secondNumber
         case "-": return firstNumber - secondNumber
         case "*": return firstNumber * secondNumber
         case "/":
             if secondNumber == 0 {
-                throw Error.DivideByZero
+                throw CalculationError.divideByZero
             }
             return firstNumber / secondNumber
             
@@ -320,26 +321,26 @@ class LLCalculatorBrain {
             
         case "sqrt":
             if firstNumber < 0 {
-                throw Error.NegativeUnderSqrt
+                throw CalculationError.negativeUnderSqrt
             }
             return sqrt(firstNumber)
             
         default:
-            throw Error.WrongEquation
+            throw CalculationError.wrongEquation
         }
     }
     
-    private func processSin(input: Double) -> Double {
+    fileprivate func processSin(_ input: Double) -> Double {
         let r = sin(input)
         return round(r * 100000000) / 100000000
     }
     
-    private func processCos(input: Double) -> Double {
+    fileprivate func processCos(_ input: Double) -> Double {
         let r = cos(input)
         return round(r * 100000000) / 100000000
     }
     
-    private func processTan(input: Double) -> Double {
+    fileprivate func processTan(_ input: Double) -> Double {
         let r = tan(input)
         return round(r * 100000000) / 100000000
     }

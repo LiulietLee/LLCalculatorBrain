@@ -1,11 +1,11 @@
 # LLCalculatorBrain
-This is a little stuff that be used to figure out string equation.
+This is a little stuff that be used to figure out string formula.
 
 ## Installation
 Just move LLCalculatorBrain.swift to your project.
 
 ## Usage
-You can see a example in /SampleExample
+You can see an example in /SampleExample
 ```
 let calculatorBrain = LLCalculatorBrain()
 

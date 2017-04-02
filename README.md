@@ -1,5 +1,5 @@
 # LLCalculatorBrain
-This is a little stuff that be used to figure out string formula.
+This is a model that is used to figure out string formula.
 
 ## Installation
 Just move LLCalculatorBrain.swift to your project.

@@ -11,7 +11,7 @@ import Darwin
 
 class LLCalculatorBrain {
     
-    fileprivate let pi = M_PI
+    fileprivate let pi = Double.pi
     
     enum CalculationError: Error {
         case divideByZero

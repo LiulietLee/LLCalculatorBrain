@@ -30,7 +30,7 @@ class LLCalculatorBrain {
     
     fileprivate func calculateEquation(_ equation: String) throws -> String {
         do {
-            let tempArray = Array(equation.characters)
+            let tempArray = Array(equation)
             let calArray = organizeArray(tempArray)
             var firstTimeArray = [String]()
             var finalResult = Double()
@@ -200,7 +200,7 @@ class LLCalculatorBrain {
                         continue
                         
                     case "pi":
-                        let num = M_PI
+                        let num = Double.pi
                         
                         if firstNumber == nil {
                             firstNumber = num
@@ -266,7 +266,7 @@ class LLCalculatorBrain {
                         operation = op
                     
                     case "pi":
-                        let num = M_PI
+                        let num = Double.pi
                         
                         if firstNumber == nil {
                             firstNumber = num

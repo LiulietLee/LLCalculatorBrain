@@ -6,7 +6,7 @@ Just move LLCalculatorBrain.swift to your project.
 
 ## Usage
 You can see an example in /SampleExample
-```
+```swift
 let calculatorBrain = LLCalculatorBrain()
 
 let equation = "tan(2*3^(3+2-3.123)/12.2)+sin(pi)+cos(2)*sqrt(144)" // Or something like this

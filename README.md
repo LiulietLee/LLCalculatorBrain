@@ -5,8 +5,9 @@ This is a model that is used to figure out string formula.
 Just move LLCalculatorBrain.swift to your project.
 
 ## Usage
-You can see an example in /SimpleExample
-```
+You can see an example in /SampleExample
+```swift
+>>>>>>> origin/master
 let calculatorBrain = LLCalculatorBrain()
 
 let equation = "tan(2*3^(3+2-3.123)/12.2)+sin(pi)+cos(2)*sqrt(144)" // Or something like this

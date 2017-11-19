@@ -5,7 +5,7 @@ This is a model that is used to figure out string formula.
 Just move LLCalculatorBrain.swift to your project.
 
 ## Usage
-You can see an example in /SampleExample
+You can see an example in /SimpleExample
 ```
 let calculatorBrain = LLCalculatorBrain()
 
